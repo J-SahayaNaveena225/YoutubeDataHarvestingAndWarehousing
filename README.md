@@ -21,7 +21,7 @@ This project gathers data from YouTube channels using the YouTube Data API, proc
 ### Prerequisites
 - Python 3.6 or later
 - MySQL server
-- Required Python libraries: googleapiclient, pymongo, mysql-connector-python, pandas, streamlit, streamlit-option-menu
+- Required Python libraries: googleapiclient, mysql-connector-python, pandas, streamlit, streamlit-option-menu
 
 ### Installation
 1. **Clone the repository**:
@@ -32,7 +32,7 @@ This project gathers data from YouTube channels using the YouTube Data API, proc
 
 2. **Install the required libraries**:
    ```bash
-   pip install google-api-python-client pymongo mysql-connector-python pandas streamlit streamlit-option-menu
+   pip install google-api-python-client mysql-connector-python pandas streamlit streamlit-option-menu
    ```
 
 3. **Setup MySQL Database**:
