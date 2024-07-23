@@ -7,7 +7,7 @@ import time
 
 ##API KEY Connection
 def Api_connect():
-    Api_Id = "AIzaSyBKMBtDCRqgfYuIA9Q5BnZuy2FPvX--1vs"
+    Api_Id = "AIzaSyAHQbsghFZnFCaWnbzBsiWIIiD95dXCT48"
 
     api_service_name = "youtube"
     api_version = "v3"
@@ -238,6 +238,7 @@ def videos_table(video_details):
             sql = "INSERT INTO videos(channel_name,channel_id,Video_Id,Title,Thumbnail,Description,Published_Date,Duration,Views,likes,Comments,Favorite_Count,Definition,Caption_Status)VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             val =tuple(video_detail.values())
             mycursor.execute(sql, val)
+            mydb.commit()
         except: 
             print("id already existing in the table")   
             
@@ -285,10 +286,6 @@ def playlists_table(playlist_details):
         mydb.commit()
         print(mycursor.rowcount, "record inserted.")
 
-
-#playlists_table(get_playlist_details())
-
-
 def comments_table(comments_details):
 
     mydb=mysql.connector.connect(
@@ -320,6 +317,7 @@ def comments_table(comments_details):
             sql = "INSERT INTO comments(Comment_Id,Video_Id,Comment_Text,Comment_Author,Comment_Publishes)VALUES (%s,%s,%s,%s,%s)"
             val = tuple(comment_detail.values())
             mycursor.execute(sql, val)
+            mydb.commit()
 
         except:
             print("id already existing in the table")
@@ -329,6 +327,17 @@ def comments_table(comments_details):
 
         print(mycursor.rowcount, "record inserted.")
 
+def is_channel_exists(channel_id):
+    try:
+        mycursor.execute("select * from channels where channel_id=%s", (channel_id,))
+    except mysql.connector.Error as err:
+        return False
+    
+    result=mycursor.fetchall()
+    if len(result)==0:
+        return False
+    else:
+        return True
 
 with st.sidebar:
      opt = option_menu("Menu",
@@ -350,10 +359,16 @@ if opt == ("Fetch & Store"):
         
         if st.button('Fetch & Store'):
             st.write("Fetching data from Youtube API")
+            # if is_channel_exists(channel_id):
+            #     st.write("Data already fetched and stored")
+            # else:
             channel_details=get_channel_data(channel_id)
+            print("channel_details", channel_details)
             channels_table(channel_details)
             video_ids=get_videos_ids(channel_id)
+            print("video_ids", video_ids)
             video_details=get_video_data(channel_id)
+            print("video_details", video_details)
             videos_table(video_details)
             playlist_details=get_playlist_details(channel_id)
             playlists_table(playlist_details)
